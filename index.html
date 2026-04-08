@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Blox Fruits Competitive</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(180deg, #0a0a0a, #050505);
+  color: white;
+}
+
+/* FIRE HEADER */
+.fireHeader {
+  position: relative;
+  text-align: center;
+  padding: 50px;
+  overflow: hidden;
+  border-bottom: 2px solid red;
+}
+
+.fire {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(255,80,0,0.9), transparent),
+    radial-gradient(circle at 20% 100%, rgba(255,0,0,0.7), transparent),
+    radial-gradient(circle at 80% 100%, rgba(255,120,0,0.7), transparent);
+  animation: fireMove 3s linear infinite;
+  filter: blur(25px);
+  opacity: 0.7;
+}
+
+@keyframes fireMove {
+  0% {transform: translateX(0);}
+  100% {transform: translateX(-50%);}
+}
+
+/* BUTTONS */
+.section {
+  text-align: center;
+  margin: 20px;
+}
+
+button {
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 12px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: red;
+}
+
+/* TABLE */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0 10px;
+}
+
+td {
+  background: #1a1a1a;
+  padding: 10px;
+}
+
+tr:hover td {
+  background: #222;
+}
+
+/* AVATAR */
+.playerBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid red;
+}
+
+/* TOP */
+.top1 td { border-left: 4px solid gold; }
+.top2 td { border-left: 4px solid silver; }
+.top3 td { border-left: 4px solid #cd7f32; }
+</style>
+</head>
+
+<body>
+
+<header class="fireHeader">
+  <div class="fire"></div>
+  <h1>🏆 Blox Fruits Competitive</h1>
+  <p>Legit Leaderboard</p>
+</header>
+
+<!-- PLATFORM -->
+<div class="section">
+  <h2>Select Platform</h2>
+  <button onclick="setPlatform('PC')">💻 PC</button>
+  <button onclick="setPlatform('Console')">🎮 Console</button>
+  <button onclick="setPlatform('Mobile')">📱 Mobile</button>
+</div>
+
+<!-- REGION -->
+<div class="section">
+  <h2>Select Region</h2>
+  <button onclick="setRegion('NA')">NA</button>
+  <button onclick="setRegion('SA')">SA</button>
+  <button onclick="setRegion('EU')">EU</button>
+  <button onclick="setRegion('ASIA')">ASIA</button>
+  <button onclick="setRegion('GLOBAL')">🌎 GLOBAL</button>
+</div>
+
+<div class="container">
+  <h2 id="title">Choose platform and region</h2>
+  <table id="table"></table>
+</div>
+
+<script>
+const avatar = "https://i.imgur.com/6VBx3io.png";
+
+let currentPlatform = null;
+let currentRegion = null;
+
+// GENERAR 20 JUGADORES
+function generate(platform, region){
+  let arr = [];
+  for(let i=1;i<=20;i++){
+    arr.push({
+      name: platform + "-" + region + "-" + i,
+      avatar: avatar
+    });
+  }
+  return arr;
+}
+
+// DATA
+const data = {};
+
+["PC","Console","Mobile"].forEach(p=>{
+  data[p]={};
+
+  ["NA","SA","EU","ASIA","GLOBAL"].forEach(r=>{
+    data[p][r] = generate(p,r);
+  });
+});
+
+function setPlatform(p){
+  currentPlatform = p;
+  render();
+}
+
+function setRegion(r){
+  currentRegion = r;
+  render();
+}
+
+function render(){
+  if(!currentPlatform || !currentRegion) return;
+
+  const players = data[currentPlatform][currentRegion];
+  const table = document.getElementById("table");
+
+  document.getElementById("title").innerText =
+    currentPlatform + " - " + currentRegion + " Top 20";
+
+  table.innerHTML = `
+    <tr>
+      <th>#</th>
+      <th>Player</th>
+    </tr>
+  `;
+
+  players.forEach((p,i)=>{
+    let cls="";
+    if(i==0) cls="top1";
+    if(i==1) cls="top2";
+    if(i==2) cls="top3";
+
+    table.innerHTML += `
+      <tr class="${cls}">
+        <td>${i+1}</td>
+        <td>
+          <div class="playerBox">
+            <img src="${p.avatar}" class="avatar">
+            ${p.name}
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+}
+</script>
+
+</body>
+</html>
